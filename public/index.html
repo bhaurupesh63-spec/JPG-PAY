@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080d18">
+<meta name="description" content="JPJ PAY demo wallet. Simulated OTP and demo transactions only. No real money is involved.">
+<title>JPJ PAY</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+
+<!-- Loading -->
+<div class="screen center" id="view-loading">
+  <div class="logo pulse">JPJ PAY</div>
+</div>
+
+<!-- ============ SIGN IN ============ -->
+<div class="screen center" id="view-login" hidden>
+  <div class="card">
+    <div class="logo">JPJ PAY</div>
+    <div class="subtitle">Welcome Back! Login to Continue</div>
+
+    <h2>Sign In</h2>
+
+    <form id="loginForm" novalidate>
+      <label for="loginMobile">Mobile Number</label>
+      <div class="phone-field">
+        <span class="prefix">+91</span>
+        <input type="tel" id="loginMobile" inputmode="numeric" autocomplete="tel-national"
+               placeholder="Enter mobile number" maxlength="10" required>
+      </div>
+
+      <label for="loginPassword">Password</label>
+      <div class="password-field">
+        <input type="password" id="loginPassword" autocomplete="current-password"
+               placeholder="Enter password" required>
+        <button type="button" class="eye" data-toggle="loginPassword" aria-label="Show password">Show</button>
+      </div>
+
+      <div class="remember">
+        <input type="checkbox" id="remember">
+        <label for="remember">Remember Me</label>
+      </div>
+
+      <p class="form-error" id="loginError" role="alert"></p>
+      <button type="submit" class="btn">SIGN IN</button>
+    </form>
+
+    <div class="links">
+      <a href="#" id="forgot">Forgot Password?</a>
+      <a href="#/signup" id="toSignup">Create Account</a>
+    </div>
+
+    <div class="footer">
+      JPJ PAY<br>
+      Demo Interface • No real payments or accounts connected
+    </div>
+  </div>
+</div>
+
+<!-- ============ CREATE ACCOUNT ============ -->
+<div class="screen center" id="view-signup" hidden>
+  <div class="card">
+    <div class="logo">JPJ PAY</div>
+    <div class="subtitle">Create your demo wallet in a minute</div>
+
+    <h2>Create Account</h2>
+
+    <form id="signupForm" novalidate>
+      <label for="signupName">Full Name</label>
+      <input type="text" id="signupName" autocomplete="name" placeholder="Enter your name" maxlength="60" required>
+
+      <label for="signupMobile">Mobile Number</label>
+      <div class="phone-field">
+        <span class="prefix">+91</span>
+        <input type="tel" id="signupMobile" inputmode="numeric" autocomplete="tel-national"
+               placeholder="Enter mobile number" maxlength="10" required>
+      </div>
+
+      <label for="signupPassword">Create Password</label>
+      <div class="password-field">
+        <input type="password" id="signupPassword" autocomplete="new-password"
+               placeholder="At least 6 characters" required>
+        <button type="button" class="eye" data-toggle="signupPassword" aria-label="Show password">Show</button>
+      </div>
+
+      <label for="signupConfirm">Confirm Password</label>
+      <input type="password" id="signupConfirm" autocomplete="new-password" placeholder="Re-enter password" required>
+
+      <p class="hint">Use a new password just for this demo. Never enter a bank password, UPI PIN or card details here.</p>
+
+      <div class="remember">
+        <input type="checkbox" id="signupAgree">
+        <label for="signupAgree">I understand JPJ PAY is a demo and no real money is involved.</label>
+      </div>
+
+      <p class="form-error" id="signupError" role="alert"></p>
+      <button type="submit" class="btn">CREATE ACCOUNT</button>
+    </form>
+
+    <div class="links single">
+      <span class="muted">Already have an account?</span>
+      <a href="#/login">Sign In</a>
+    </div>
+
+    <div class="footer">
+      JPJ PAY<br>
+      Demo Interface • No real payments or accounts connected
+    </div>
+  </div>
+</div>
+
+<!-- ============ OTP ============ -->
+<div class="screen center" id="view-otp" hidden>
+  <div class="card">
+    <div class="logo">JPJ PAY</div>
+    <div class="subtitle" id="otpSubtitle">Verify your mobile number</div>
+
+    <h2>OTP Verification</h2>
+
+    <p class="otp-info">Enter the 6 digit code for <strong id="otpMobile">+91</strong></p>
+
+    <div class="demo-otp" role="status" aria-live="polite">
+      <span class="tag">SIMULATED OTP</span>
+      <div class="demo-otp-code" id="demoOtpCode">------</div>
+      <small>For testing only. No SMS was sent. Never share a real OTP with anyone.</small>
+    </div>
+
+    <form id="otpForm" novalidate>
+      <label for="otp0">Enter OTP</label>
+      <div class="otp-boxes" id="otpBoxes">
+        <input id="otp0" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Digit 1">
+        <input inputmode="numeric" maxlength="1" aria-label="Digit 2">
+        <input inputmode="numeric" maxlength="1" aria-label="Digit 3">
+        <input inputmode="numeric" maxlength="1" aria-label="Digit 4">
+        <input inputmode="numeric" maxlength="1" aria-label="Digit 5">
+        <input inputmode="numeric" maxlength="1" aria-label="Digit 6">
+      </div>
+
+      <p class="otp-timer" id="otpTimer"></p>
+      <p class="form-error" id="otpError" role="alert"></p>
+
+      <button type="submit" class="btn" id="verifyOtpBtn">VERIFY OTP</button>
+      <button type="button" class="btn btn-outline" id="resendOtpBtn" disabled>RESEND OTP</button>
+    </form>
+
+    <div class="links single">
+      <a href="#" id="otpBack">← Change number</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="view-app" hidden>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="logo small">JPJ PAY</div>
+      <nav class="sidenav" aria-label="Main">
+        <a href="#/dashboard" data-nav="dashboard">Dashboard</a>
+        <a href="#/add" data-nav="add">Add Money</a>
+        <a href="#/withdraw" data-nav="withdraw">Withdraw</a>
+        <a href="#/history" data-nav="history">History</a>
+        <a href="#/profile" data-nav="profile">Profile</a>
+      </nav>
+      <a href="#/profile" class="avatar" id="topAvatar" aria-label="Profile">JP</a>
+    </div>
+  </header>
+
+  <div class="demo-strip">DEMO MODE • All balances and transactions are simulated • No real money</div>
+
+  <main class="content">
+
+    <!-- Dashboard -->
+    <section class="page" id="page-dashboard" hidden>
+      <p class="greet">Hello, <strong id="greetName">there</strong> 👋</p>
+
+      <div class="balance-card">
+        <div class="balance-top">
+          <span>Demo Balance</span>
+          <span class="tag light">DEMO</span>
+        </div>
+        <div class="balance-amount" id="balanceAmount">₹0.00</div>
+        <button type="button" class="link-btn" id="toggleBalance">Hide balance</button>
+        <div class="balance-foot">Simulated wallet • Not real money</div>
+      </div>
+
+      <div class="actions">
+        <a href="#/add" class="action"><span class="ico">＋</span>Add Money</a>
+        <a href="#/withdraw" class="action"><span class="ico">↑</span>Withdraw</a>
+        <a href="#/history" class="action"><span class="ico">☰</span>History</a>
+        <a href="#/profile" class="action"><span class="ico">👤</span>Profile</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span>Total Added</span>
+          <strong class="pos" id="statAdded">₹0.00</strong>
+        </div>
+        <div class="stat">
+          <span>Total Withdrawn</span>
+          <strong class="neg" id="statWithdrawn">₹0.00</strong>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Recent Demo Transactions</h3>
+          <a href="#/history">View all</a>
+        </div>
+        <ul class="txn-list" id="recentList"></ul>
+      </div>
+    </section>
+
+    <!-- Add Money -->
+    <section class="page" id="page-add" hidden>
+      <div class="panel">
+        <h3 class="page-title">Add Money <span class="tag">DEMO</span></h3>
+        <p class="muted small-text">Adds simulated money to your demo wallet. No card, bank or UPI details are needed or collected.</p>
+
+        <form id="addForm" novalidate>
+          <label for="addAmount">Amount</label>
+          <div class="amount-field">
+            <span>₹</span>
+            <input type="text" id="addAmount" inputmode="decimal" placeholder="0" autocomplete="off">
+          </div>
+          <div class="chips" data-target="addAmount">
+            <button type="button" data-amt="100">₹100</button>
+            <button type="button" data-amt="500">₹500</button>
+            <button type="button" data-amt="1000">₹1,000</button>
+            <button type="button" data-amt="2000">₹2,000</button>
+          </div>
+
+          <label>Demo Source</label>
+          <div class="methods">
+            <label class="method"><input type="radio" name="addMethod" value="Demo UPI" checked><span>Demo UPI</span></label>
+            <label class="method"><input type="radio" name="addMethod" value="Demo Card"><span>Demo Card</span></label>
+            <label class="method"><input type="radio" name="addMethod" value="Demo Net Banking"><span>Demo Net Banking</span></label>
+          </div>
+
+          <p class="form-error" id="addError" role="alert"></p>
+          <button type="submit" class="btn">ADD DEMO MONEY</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Withdraw -->
+    <section class="page" id="page-withdraw" hidden>
+      <div class="panel">
+        <h3 class="page-title">Withdraw <span class="tag">DEMO</span></h3>
+        <p class="muted small-text">Available demo balance: <strong id="withdrawAvailable">₹0.00</strong></p>
+
+        <form id="withdrawForm" novalidate>
+          <label for="withdrawAmount">Amount</label>
+          <div class="amount-field">
+            <span>₹</span>
+            <input type="text" id="withdrawAmount" inputmode="decimal" placeholder="0" autocomplete="off">
+          </div>
+          <div class="chips" data-target="withdrawAmount">
+            <button type="button" data-amt="100">₹100</button>
+            <button type="button" data-amt="500">₹500</button>
+            <button type="button" data-amt="1000">₹1,000</button>
+            <button type="button" data-amt="max">Max</button>
+          </div>
+
+          <label>Send To</label>
+          <div class="methods">
+            <label class="method"><input type="radio" name="withdrawMethod" value="Demo Bank Account" checked><span>Demo Bank Account<small>•••• 0000</small></span></label>
+            <label class="method"><input type="radio" name="withdrawMethod" value="Demo UPI ID"><span>Demo UPI ID<small>demo@jpjpay</small></span></label>
+          </div>
+
+          <p class="hint">Withdrawals are simulated. No bank account, UPI PIN or password is required.</p>
+          <p class="form-error" id="withdrawError" role="alert"></p>
+          <button type="submit" class="btn">WITHDRAW (DEMO)</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- History -->
+    <section class="page" id="page-history" hidden>
+      <div class="panel">
+        <h3 class="page-title">Transaction History <span class="tag">DEMO</span></h3>
+        <div class="tabs" role="tablist">
+          <button type="button" class="active" data-filter="all" role="tab">All</button>
+          <button type="button" data-filter="add" role="tab">Added</button>
+          <button type="button" data-filter="withdraw" role="tab">Withdrawn</button>
+        </div>
+        <div id="historyList"></div>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section class="page" id="page-profile" hidden>
+      <div class="panel profile-head">
+        <div class="avatar big" id="profileAvatar">JP</div>
+        <h3 id="profileName">—</h3>
+        <p class="muted" id="profileMobile">+91</p>
+        <span class="verified">✓ Mobile verified (demo OTP)</span>
+      </div>
+
+      <div class="panel">
+        <h3>Account Details</h3>
+        <dl class="details">
+          <div><dt>Account type</dt><dd>Demo wallet</dd></div>
+          <div><dt>Demo balance</dt><dd id="profileBalance">₹0.00</dd></div>
+          <div><dt>Transactions</dt><dd id="profileCount">0</dd></div>
+          <div><dt>Member since</dt><dd id="profileSince">—</dd></div>
+        </dl>
+      </div>
+
+      <div class="panel">
+        <h3>Edit Profile</h3>
+        <form id="profileForm" novalidate>
+          <label for="profileNameInput">Full Name</label>
+          <input type="text" id="profileNameInput" maxlength="60" autocomplete="name">
+          <p class="form-error" id="profileError" role="alert"></p>
+          <button type="submit" class="btn">SAVE CHANGES</button>
+        </form>
+      </div>
+
+      <div class="panel notice">
+        <strong>About this demo</strong>
+        <p>JPJ PAY is a demonstration app. OTPs are simulated and shown on screen, and every transaction is fake. It is not connected to any bank, UPI or card network.</p>
+      </div>
+
+      <button type="button" class="btn btn-danger" id="logoutBtn">LOGOUT</button>
+    </section>
+
+    <div class="footer">JPJ PAY • Demo Interface • No real payments or accounts connected</div>
+  </main>
+
+  <nav class="bottomnav" aria-label="Main">
+    <a href="#/dashboard" data-nav="dashboard"><span>⌂</span>Home</a>
+    <a href="#/add" data-nav="add"><span>＋</span>Add</a>
+    <a href="#/withdraw" data-nav="withdraw"><span>↑</span>Withdraw</a>
+    <a href="#/history" data-nav="history"><span>☰</span>History</a>
+    <a href="#/profile" data-nav="profile"><span>👤</span>Profile</a>
+  </nav>
+</div>
+
+<!-- Receipt -->
+<div class="modal" id="receipt" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="receiptTitle">
+    <div class="stamp">DEMO TRANSACTION</div>
+    <div class="receipt-icon" id="receiptIcon">✓</div>
+    <h3 id="receiptTitle">Demo money added</h3>
+    <div class="receipt-amount" id="receiptAmount">₹0.00</div>
+    <dl class="details">
+      <div><dt>Method</dt><dd id="receiptMethod">—</dd></div>
+      <div><dt>Reference</dt><dd id="receiptRef">—</dd></div>
+      <div><dt>Date</dt><dd id="receiptDate">—</dd></div>
+      <div><dt>Balance after</dt><dd id="receiptBalance">—</dd></div>
+    </dl>
+    <p class="hint center-text">Simulated transaction. No real money was moved.</p>
+    <button type="button" class="btn" id="receiptClose">DONE</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
